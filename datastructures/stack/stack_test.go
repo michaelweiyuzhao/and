@@ -2,7 +2,6 @@ package stack
 
 import (
 	"testing"
-	"math/rand"
 )
 
 func TestEmptyOnCreate(t *testing.T) {
@@ -14,7 +13,7 @@ func TestEmptyOnCreate(t *testing.T) {
 
 func TestPushOnCreateNotEmpty(t *testing.T) {
 	myStack := Stack{}
-	err := myStack.Push(rand.Int())
+	err := myStack.Push(0)
 	if err != nil {
 		t.Errorf("Stack returned error")
 	}
@@ -92,5 +91,68 @@ func TestEmptyAfterPushesAndPops(t *testing.T) {
 	myStack.Pop()
 	if !myStack.Empty() {
 		t.Errorf("Stack not empty after push and pop")
+	}
+}
+
+func TestSizeAfterPushes(t *testing.T) {
+	myStack := Stack{}
+	for i := 0; i < 10; i++ {
+		err := myStack.Push(i)
+		if err != nil {
+			t.Errorf("Stack returned error on push")
+		}
+	}
+	if myStack.Size() != 10 {
+		t.Errorf("Stack size is incorrect")
+	}
+}
+
+func TestSizeAfterPops(t *testing.T) {
+	myStack := Stack{}
+	for i := 0; i < 10; i++ {
+		err := myStack.Push(i)
+		if err != nil {
+			t.Errorf("Stack returned error on push")
+		}
+	}
+	for i := 0; i < 5; i++ {
+		_, err := myStack.Pop()
+		if err != nil {
+			t.Errorf("Stack returned error on push")
+		}
+	}
+	if myStack.Size() != 5 {
+		t.Errorf("Stack size is incorrect")
+	}
+}
+
+func TestPeekOnCreateCausesError(t *testing.T) {
+	myStack := Stack{}
+	_, err := myStack.Peek()
+	if err == nil {
+		t.Errorf("Stack returned no error")
+	}
+	if !myStack.Empty() {
+		t.Errorf("Stack was not empty after pop")
+	}
+}
+
+func TestPushThenPeekReturnsSameValueAndCorrectSize(t *testing.T) {
+	myStack := Stack{}
+	expected := 10
+	err := myStack.Push(expected)
+	if err != nil {
+		t.Errorf("Stack returned error on push")
+	}
+	actual, err := myStack.Peek()
+	if err != nil {
+		t.Errorf("Stack returned error on pop")
+	}
+	if actual != expected {
+		t.Errorf("Stack returned different value")
+	}
+	size := myStack.Size()
+	if size != 1 {
+		t.Errorf("Stack size reduced after peek")
 	}
 }
